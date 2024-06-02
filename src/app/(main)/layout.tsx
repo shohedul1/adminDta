@@ -16,9 +16,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         }
     }, [session, status, router]);
 
-    // if (status === 'loading') {
-    //     return <div>Loading...</div>; // Show a loading state
-    // }
 
     return (
         <div>

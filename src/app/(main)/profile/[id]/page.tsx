@@ -1,5 +1,8 @@
+'use client';
 
 import ProfileEdit from "@/components/ProfileEdit/ProfileEdit";
+import { useEffect, useState } from "react";
+
 interface User {
     _id: string;
     name: string;
@@ -12,9 +15,9 @@ interface User {
     about?: string;
 }
 
-async function getUserData(params: { id: string }): Promise<User | undefined> {
+async function getUserData(id: string): Promise<User | undefined> {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user/${params.id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user/${id}`, {
             cache: "no-store"
         });
         if (res.ok) {
@@ -25,13 +28,19 @@ async function getUserData(params: { id: string }): Promise<User | undefined> {
     }
 }
 
-const UserProfile: React.FC<{ params: { id: string } }> = async ({ params }) => {
+const UserProfile: React.FC<{ params: { id: string } }> = ({ params }) => {
+    const [profile, setProfile] = useState<User | null>(null);
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            const data = await getUserData(params.id);
+            if (data) {
+                setProfile(data);
+            }
+        };
 
-    
-    const profile = await getUserData(params)
-    // console.log('profile', profile)
-
+        fetchUserData();
+    }, [params.id]);
 
     return (
         <div>
