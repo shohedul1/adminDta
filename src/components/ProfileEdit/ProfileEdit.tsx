@@ -77,7 +77,6 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ profile, params }) => {
             const response = await fetch(`/api/user/${params.id}`, {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${session?.user?.accessToken}`
                 },
                 method: "PATCH",
                 body: JSON.stringify(updateUser)
