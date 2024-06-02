@@ -26,6 +26,9 @@ async function getUserData(params: { id: string }): Promise<User | undefined> {
 }
 
 const UserProfile: React.FC<{ params: { id: string } }> = async ({ params }) => {
+
+
+    
     const profile = await getUserData(params)
     // console.log('profile', profile)
 

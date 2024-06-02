@@ -56,12 +56,12 @@ const ProfileDeails: React.FC<ProfileDetailsProps> = ({ profile }) => {
             <div className="flex flex-col md:felx-row gap-5">
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Name:</p>
-                    <p className='text-xl font-bold text-gray-400'>{userData?.name || session?.user?.name}</p>
+                    <p className='text-xl font-bold text-gray-400'>{userData?.name}</p>
                 </div>
 
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Email:</p>
-                    <p className='text-xl font-boldv text-gray-400'>{userData?.email || session?.user?.email}</p>
+                    <p className='text-xl font-boldv text-gray-400'>{userData?.email}</p>
                 </div>
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Age:</p>
@@ -86,7 +86,7 @@ const ProfileDeails: React.FC<ProfileDetailsProps> = ({ profile }) => {
             </div>
 
             <div className="pt-5">
-                {userData?.email === session?.user?.email || session?.user?.email ? (
+                {userData?.email === session?.user?.email ? (
                     <Link
                         className="px-3 py-2 hover:bg-red-500 border border-red-500 hover:text-white transition-all duration-300 rounded-lg text-black font-bold"
                         href={`/profile/${userData?._id}`}
