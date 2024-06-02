@@ -28,7 +28,7 @@ interface ProfileEditProps {
 }
 
 const ProfileEdit: React.FC<ProfileEditProps> = ({ profile, params }) => {
-    console.log('profiel',profile)
+    console.log('profiel', profile)
     const CLOUD_NAME = "djhjt07rh";
     const UPLOAD_PRESET = "nextjs_blog_images";
 

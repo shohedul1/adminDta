@@ -2,7 +2,7 @@
 
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import ProfileDeails from './ProfileDeails';
+import ProfileDetails from './ProfileDeails';
 
 type User = {
     _id: string;
@@ -19,48 +19,43 @@ type User = {
     about?: string;
 };
 
+async function getUserData() {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user/`, {
+            cache: "no-store"
+        });
+        if (res.ok) {
+            return res.json();
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+}
+
 const UserProfile: React.FC = () => {
     const { data: session } = useSession();
     const [profile, setProfile] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
-
-    const userGet = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`, {
-                cache: 'no-store'
-            });
-            if (res.ok) {
-                const resData: User[] = await res.json();
-                const userData = resData.find((user) => user.email === session?.user?.email) || null;
-                setProfile(userData);
-            } else {
-                console.error('Failed to fetch user profile');
-            }
-        } catch (error) {
-            console.error('An error occurred while fetching user profile:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
-        if (session) {
-            userGet();
-        } else {
-            setLoading(false);
-        }
-    }, [session]);
+        const fetchUserData = async () => {
+            if (session?.user?.email) {
+                const data = await getUserData();
+                if (data) {
+                    const userData = data.find((user: User) => user.email === session?.user?.email);
+                    if (userData) {
+                        setProfile(userData);
+                    }
+                }
+            }
+        };
 
-    if (loading) {
-        return <p>Loading...</p>;
-    }
+        fetchUserData();
+    }, [session]);
 
     return (
         <div>
-            {profile ? (
-                <ProfileDeails profile={profile} />
-            ) : (
-                <p>No profile found for the current session.</p>
+            {profile && (
+                <ProfileDetails profile={profile} />
             )}
         </div>
     );
