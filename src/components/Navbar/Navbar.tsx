@@ -44,12 +44,10 @@ const Navbar = () => {
 
     // Ensure that the found user has the correct type
     const userData = profile.find((prev) => prev.email === session?.user?.email);
-    console.log("userData", userData); // Debugging line
 
     // Use a default image if no avatar is found
     const imageUrl = userData?.avatar?.url || session?.user?.image || '/food_18.png';
 
-    console.log("imageUrl", imageUrl); // Debugging line
 
     const [toggle, setToggle] = useState(false);
 

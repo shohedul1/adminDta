@@ -1,7 +1,7 @@
 'use client';
 
 import Navbar from '@/components/Navbar/Navbar';
-import { useSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
@@ -16,9 +16,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         }
     }, [session, status, router]);
 
-    if (status === 'loading') {
-        return <div>Loading...</div>; // Show a loading state
-    }
+    // if (status === 'loading') {
+    //     return <div>Loading...</div>; // Show a loading state
+    // }
 
     return (
         <div>

@@ -35,7 +35,7 @@ const ProfileDeails: React.FC<ProfileDetailsProps> = ({ profile }) => {
 
 
     return (
-        <div className="px-5 py-5 lg:px-20 bg-blue-100">
+        <div className="px-5 py-10 lg:px-20 bg-blue-100  h-full w-full">
             <div className="text-center text-primaryColor pb-10">
                 <h2 className='text-2xl font-bold text-gray-700 '>Profile infromation</h2>
             </div>
@@ -52,8 +52,21 @@ const ProfileDeails: React.FC<ProfileDetailsProps> = ({ profile }) => {
                     />
                 </div>
             </div>
-            
+
             <div className="flex flex-col md:felx-row gap-5">
+                <div className="space-y-2">
+                    <p className="text-2xl font-bold">Name:</p>
+                    <p className='text-xl font-bold text-gray-400'>{userData?.name || session?.user?.name}</p>
+                </div>
+
+                <div className="space-y-2">
+                    <p className="text-2xl font-bold">Email:</p>
+                    <p className='text-xl font-boldv text-gray-400'>{userData?.email || session?.user?.email}</p>
+                </div>
+                <div className="space-y-2">
+                    <p className="text-2xl font-bold">Age:</p>
+                    <p className='text-xl font-bold text-gray-400'>{userData?.age}</p>
+                </div>
 
                 <div className='space-y-2'>
                     <p className="text-2xl font-bold">About Me</p>
@@ -64,20 +77,7 @@ const ProfileDeails: React.FC<ProfileDetailsProps> = ({ profile }) => {
                     <p className="text-2xl font-bold">Designation:</p>
                     <p className='text-xl font-bold text-gray-400'>{userData?.designation}</p>
                 </div>
-                <div className="space-y-2">
-                    <p className="text-2xl font-bold">Email:</p>
-                    <p className='text-xl font-boldv text-gray-400'>{userData?.email || session?.user?.email}</p>
-                </div>
-
-                <div className="space-y-2">
-                    <p className="text-2xl font-bold">Name:</p>
-                    <p className='text-xl font-bold text-gray-400'>{userData?.name || session?.user?.name}</p>
-                </div>
-
-                <div className="space-y-2">
-                    <p className="text-2xl font-bold">Age:</p>
-                    <p className='text-xl font-bold text-gray-400'>{userData?.age}</p>
-                </div>
+               
 
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Location:</p>

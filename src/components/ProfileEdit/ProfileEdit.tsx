@@ -28,6 +28,7 @@ interface ProfileEditProps {
 }
 
 const ProfileEdit: React.FC<ProfileEditProps> = ({ profile, params }) => {
+    console.log('profiel',profile)
     const CLOUD_NAME = "djhjt07rh";
     const UPLOAD_PRESET = "nextjs_blog_images";
 
@@ -39,7 +40,7 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ profile, params }) => {
 
     const handleEditSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const { name, designation, age, location, about, email } = profileToEdit;
+        const { name, designation, age, location, about } = profileToEdit;
 
         if (!name) {
             toast.error("Name is required");

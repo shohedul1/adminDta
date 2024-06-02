@@ -32,7 +32,6 @@ const UserProfile: React.FC<{ params: { id: string } }> = async ({ params }) => 
 
     return (
         <div>
-
             {profile ? <ProfileEdit profile={profile} params={params} /> : <p>Loading...</p>}
         </div>
     );
