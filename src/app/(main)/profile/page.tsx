@@ -20,8 +20,9 @@ type User = {
 };
 
 const UserProfile: React.FC = () => {
-    const [profile, setProfile] = useState<User[]>([]);
     const { data: session } = useSession();
+    const [profile, setProfile] = useState<User | null>(null);
+    const [loading, setLoading] = useState(true);
 
     const userGet = async () => {
         try {
@@ -30,24 +31,36 @@ const UserProfile: React.FC = () => {
             });
             if (res.ok) {
                 const resData: User[] = await res.json();
-                setProfile(resData);
+                const userData = resData.find((user) => user.email === session?.user?.email) || null;
+                setProfile(userData);
             } else {
                 console.error('Failed to fetch user profile');
             }
         } catch (error) {
             console.error('An error occurred while fetching user profile:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
-
     useEffect(() => {
-        userGet();
-    }, []);
+        if (session) {
+            userGet();
+        } else {
+            setLoading(false);
+        }
+    }, [session]);
+
+    if (loading) {
+        return <p>Loading...</p>;
+    }
 
     return (
         <div>
-            {session && (
+            {profile ? (
                 <ProfileDeails profile={profile} />
+            ) : (
+                <p>No profile found for the current session.</p>
             )}
         </div>
     );
