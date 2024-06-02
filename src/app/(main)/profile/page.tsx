@@ -19,9 +19,9 @@ type User = {
     about?: string;
 };
 
-async function getUserData() {
+async function getUserData(): Promise<User[] | undefined> {
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user/`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`, {
             cache: "no-store"
         });
         if (res.ok) {
@@ -54,8 +54,10 @@ const UserProfile: React.FC = () => {
 
     return (
         <div>
-            {profile && (
+            {profile ? (
                 <ProfileDetails profile={profile} />
+            ) : (
+                <p>No profile found for the current session.</p>
             )}
         </div>
     );
