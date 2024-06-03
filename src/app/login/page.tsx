@@ -7,7 +7,6 @@ import { useRouter } from "next/navigation";
 import { ChangeEvent, useState, useEffect } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { BiHide, BiShow } from "react-icons/bi";
-import { useSession } from "next-auth/react";
 import { FcGoogle } from "react-icons/fc";
 
 const initialState = {
@@ -19,22 +18,19 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [state, setState] = useState(initialState);
     const router = useRouter();
-    const { data: session, status } = useSession();
 
-    useEffect(() => {
-        if (session) {
-            router.push('/'); // Redirect if already logged in
-        }
-    }, [session, router]);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            await signIn("credentials", {
+            const res = await signIn("credentials", {
                 email: state.email,
                 redirect: false,
                 password: state.password,
             });
+            if (res?.ok) {
+                router.push("/")
+            }
 
         } catch (error) {
             // Display error toast message
@@ -60,9 +56,9 @@ export default function LoginPage() {
                             name="email"
                             onChange={handleChange}
                             value={state.email}
+                            autoComplete="current-email"
                             placeholder="enter your email"
                             className="mt-1 mb-2 w-full bg-slate-200 px-2 py-1 rounded focus-within:outline-blue-300 placeholder:text-green-500"
-                            autoComplete="email"
                         />
 
                         <label htmlFor="password" className="text-white">Password</label>
@@ -71,10 +67,10 @@ export default function LoginPage() {
                                 type={showPassword ? "text" : "password"}
                                 onChange={handleChange}
                                 value={state.password}
+                                autoComplete="current-password"
                                 name="password"
                                 placeholder="enter your password"
                                 className="w-full bg-slate-200 border-none outline-none placeholder:text-green-500"
-                                autoComplete="current-password"
                             />
                             <span
                                 className="flex text-xl cursor-pointer"
@@ -90,7 +86,7 @@ export default function LoginPage() {
                             Login
                         </button>
                         <span className="text-center text-white text-2xl">or</span>
-                        <button onClick={() => signIn("google")} className="bg-white p-2 text-xl flex items-center gap-2 justify-center rounded-md">
+                        <button onClick={() => signIn("google", { callbackUrl: "/" })} className="bg-white p-2 text-xl flex items-center gap-2 justify-center rounded-md">
                             <FcGoogle className="w-8 h-8" />
                             Google
                         </button>

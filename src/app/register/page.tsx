@@ -82,6 +82,7 @@ export default function RegisterPage() {
                             name="name"
                             placeholder="Enter your name"
                             onChange={handleChange}
+                            autoComplete="current-name"
                             value={state.name}
                             className="mt-1 mb-2 w-full bg-slate-200 px-2 py-1 rounded focus-within:outline-blue-300 placeholder:text-green-500"
                         />
@@ -90,6 +91,7 @@ export default function RegisterPage() {
                             type="email"
                             id="email"
                             name="email"
+                            autoComplete="current-email"
                             onChange={handleChange}
                             value={state.email}
                             placeholder="Enter your email"
@@ -102,6 +104,7 @@ export default function RegisterPage() {
                                 id="password"
                                 name="password"
                                 onChange={handleChange}
+                                autoComplete="current-password"
                                 value={state.password}
                                 placeholder="Enter your password"
                                 className="w-full bg-slate-200 border-none outline-none placeholder:text-green-500"

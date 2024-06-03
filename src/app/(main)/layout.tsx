@@ -10,8 +10,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     const router = useRouter();
 
     useEffect(() => {
-        if (!session) {
-            router.push('/login');
+        if (session) {
+            router.push('/');
+        } else {
+            router.push("/login")
         }
     }, [status, router]);
 
