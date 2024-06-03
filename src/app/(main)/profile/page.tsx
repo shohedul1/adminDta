@@ -60,10 +60,8 @@ const UserProfile: React.FC = () => {
 
     return (
         <div>
-            {userProfile ? (
+            {userProfile && (
                 <ProfileDetails userProfile={userProfile} />
-            ) : (
-                <p>No profile found for the current session.</p>
             )}
         </div>
     );
