@@ -6,8 +6,7 @@ export type User = {
     createdAt: string;
     updatedAt: string;
     __v: number;
-    avatar?: { url: string; id?: string };
-    // avatar: { url: string };
+    avatar: { url: string };
     age?: string;
     designation?: string;
     location?: string;

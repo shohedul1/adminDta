@@ -1,4 +1,5 @@
 'use client';
+
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { User, fetchUserProfile, fetchUsers } from '@/services/indext';
@@ -14,7 +15,9 @@ const UserProfile: React.FC = () => {
         const fetchUserData = async () => {
             try {
                 if (session?.user?.email) {
+                    console.log("Fetching user data...");
                     const data = await fetchUsers();
+                    console.log("User data fetched:", data);
                     if (data) {
                         const userData = data.find((user: User) => user.email === session?.user?.email);
                         if (userData) {
@@ -44,7 +47,9 @@ const UserProfile: React.FC = () => {
         const fetchProfileData = async () => {
             if (profile?._id) {
                 try {
+                    console.log("Fetching profile data for ID:", profile._id);
                     const data = await fetchUserProfile(profile._id);
+                    console.log("Profile data fetched:", data);
                     if (data) {
                         setUserProfile(data);
                     } else {
@@ -62,9 +67,6 @@ const UserProfile: React.FC = () => {
     console.log("UserProfile", userProfile);
     console.log("shohidul", profile)
     console.log("session", session);
-
-
-
 
     if (loading) {
         return <p>Loading...</p>;
