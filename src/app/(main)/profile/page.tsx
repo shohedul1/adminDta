@@ -26,6 +26,8 @@ async function fetchUser(): Promise<User[] | undefined> {
         });
         if (res.ok) {
             return res.json();
+        } else {
+            console.error("Failed to fetch user data:", res.statusText);
         }
     } catch (error) {
         console.error("Error fetching user data:", error);
@@ -44,8 +46,14 @@ const UserProfile: React.FC = () => {
                     const userData = data.find((user: User) => user.email === session?.user?.email);
                     if (userData) {
                         setProfile(userData);
+                    } else {
+                        console.warn("No matching user found");
                     }
+                } else {
+                    console.warn("No user data returned from API");
                 }
+            } else {
+                console.warn("No session email found");
             }
         };
 
