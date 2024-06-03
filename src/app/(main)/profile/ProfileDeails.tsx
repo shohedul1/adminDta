@@ -1,10 +1,24 @@
 
 'use client';
 
-import { User } from '@/services/indext';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+
+type User = {
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    avatar: { url: string };
+    age?: string;
+    designation?: string;
+    location?: string;
+    about?: string;
+};
 
 
 type ProfileDetailsProps = {

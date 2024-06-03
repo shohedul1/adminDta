@@ -22,12 +22,10 @@ export default function LoginPage() {
     const { data: session, status } = useSession();
 
     useEffect(() => {
-        if (status === 'loading') return; // Do nothing while loading
         if (session) {
-            toast.success("Login successful");
             router.push('/'); // Redirect if already logged in
         }
-    }, [session, status, router]);
+    }, [session, router]);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();

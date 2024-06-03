@@ -1,11 +1,24 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
-import React, { useEffect, useState } from 'react';
-import { User } from '@/services/indext';
 import ProfileDetails from './ProfileDeails';
+import { useEffect, useState } from 'react';
 
-// Fetch user data function
+type User = {
+    _id: string;
+    name: string;
+    email: string;
+    password: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    avatar: { url: string };
+    age?: string;
+    designation?: string;
+    location?: string;
+    about?: string;
+};
+
 async function fetchUsers(): Promise<User[] | undefined> {
     const apiUrl = `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`;
     console.log("Fetching user data from:", apiUrl);
@@ -31,12 +44,12 @@ const UserProfile: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchUserData = async () => {
-            if (session) {
+        const userDataFetching = async () => {
+            if (status === 'authenticated' && session?.user?.email) {
                 try {
                     const data = await fetchUsers();
                     if (data) {
-                        const userData = data.find((user: User) => user.email === session?.user?.email);
+                        const userData = data.find((user) => user.email === session?.user?.email);
                         if (userData) {
                             setProfile(userData);
                         } else {
@@ -49,12 +62,14 @@ const UserProfile: React.FC = () => {
                     console.error("Error fetching user data:", error);
                 }
             } else {
-                console.warn("No session email found");
+                console.warn("User is not authenticated or session email not found");
             }
             setLoading(false);
         };
-
-        fetchUserData();
+        
+        if (status !== 'loading') {
+            userDataFetching();
+        }
     }, [session, status]);
 
     console.log("UserProfile", profile);
