@@ -19,7 +19,7 @@ type User = {
     about?: string;
 };
 
-async function getUserData(): Promise<User[] | undefined> {
+async function fetchUser(): Promise<User[] | undefined> {
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`, {
             cache: "no-store"
@@ -39,7 +39,7 @@ const UserProfile: React.FC = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             if (session?.user?.email) {
-                const data = await getUserData();
+                const data = await fetchUser();
                 if (data) {
                     const userData = data.find((user: User) => user.email === session?.user?.email);
                     if (userData) {
