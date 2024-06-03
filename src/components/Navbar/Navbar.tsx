@@ -8,45 +8,73 @@ import React, { useEffect, useState } from 'react';
 
 const pacifico = Pacifico({ subsets: ["latin"], weight: ["400"] }); // Corrected weights
 
-// Define the type for the user profile
-interface UserProfile {
+type User = {
+    _id: string;
+    name: string;
     email: string;
-    avatar?: { url: string };
-    // Add other properties as needed
-}
+    password: string;
+    createdAt: string;
+    updatedAt: string;
+    __v: number;
+    avatar: { url: string };
+    age?: string;
+    designation?: string;
+    location?: string;
+    about?: string;
+};
 
+async function fetchUser(): Promise<User[] | undefined> {
+    const apiUrl = '/api/user';
+    console.log("Fetching user data from:", apiUrl);
+
+    try {
+        const res = await fetch(apiUrl, {
+            cache: "no-store"
+        });
+
+        if (res.ok) {
+            return res.json();
+        } else {
+            console.error("Failed to fetch user data:", res.statusText);
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+}
 const Navbar = () => {
     const { data: session, status } = useSession();
-
-    // Use the defined type for the profile state
-    const [profile, setProfile] = useState<UserProfile[]>([]);
-
-    const userGet = async () => {
-        try {
-            const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`, {
-                cache: 'no-store'
-            });
-            if (res.ok) {
-                const resData = await res.json();
-                console.log('API response data:', resData); // Debugging line
-                setProfile(resData);
-            } else {
-                console.error('Failed to fetch user profile');
-            }
-        } catch (error) {
-            console.error('An error occurred while fetching user profile:', error);
-        }
-    };
+    const [profile, setProfile] = useState<User | null>(null);
 
     useEffect(() => {
-        userGet();
-    }, []);
+        const fetchUserData = async () => {
+            if (status === 'authenticated' && session?.user?.email) {
+                const data = await fetchUser();
+                if (data) {
+                    const userData = data.find((user: User) => user.email === session?.user?.email);
+                    if (userData) {
+                        setProfile(userData);
+                    } else {
+                        console.warn("No matching user found for email:", session?.user?.email);
+                    }
+                } else {
+                    console.warn("No user data returned from API");
+                }
+            } else if (status !== 'authenticated') {
+                console.warn("User is not authenticated");
+            } else {
+                console.warn("No session email found");
+            }
+        };
+
+        fetchUserData();
+    }, [session, status]);
+
+    console.log("shohiudlPramanik", profile)
 
     // Ensure that the found user has the correct type
-    const userData = profile.find((prev) => prev.email === session?.user?.email);
 
     // Use a default image if no avatar is found
-    const imageUrl = userData?.avatar?.url || session?.user?.image || '/food_18.png';
+    const imageUrl = profile?.avatar?.url || session?.user?.image || '/food_18.png';
 
 
     const [toggle, setToggle] = useState(false);

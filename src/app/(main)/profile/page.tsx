@@ -68,6 +68,8 @@ const UserProfile: React.FC = () => {
         fetchUserData();
     }, [session, status]);
 
+    console.log("shohiudlPramanik",profile)
+
     if (loading) {
         return <p>Loading...</p>;
     }
