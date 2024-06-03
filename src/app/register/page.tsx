@@ -51,7 +51,8 @@ export default function RegisterPage() {
             if (response.ok) {
                 toast.success("Registration Successful");
                 setTimeout(() => {
-                    router.push("/login", { scroll: false });
+                    window.location.reload()
+                    router.push("/login");
                 }, 1000);
             } else {
                 const data = await response.json();
