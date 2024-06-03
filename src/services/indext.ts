@@ -15,7 +15,7 @@ export type User = {
 };
 
 export async function fetchUsers(): Promise<User[] | undefined> {
-    const apiUrl = '/api/user';
+    const apiUrl = `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`;
     console.log("Fetching user data from:", apiUrl);
 
     try {
@@ -34,7 +34,7 @@ export async function fetchUsers(): Promise<User[] | undefined> {
 }
 
 export async function fetchUserProfile(userId: string): Promise<User | undefined> {
-    const apiUrl = `/api/user/${userId}`;
+    const apiUrl = `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user/${userId}`;
     console.log("Fetching user profile from:", apiUrl);
 
     try {

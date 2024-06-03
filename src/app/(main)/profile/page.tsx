@@ -1,5 +1,4 @@
 'use client';
-
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { User, fetchUserProfile, fetchUsers } from '@/services/indext';
@@ -61,10 +60,10 @@ const UserProfile: React.FC = () => {
     }, [profile]);
 
     console.log("UserProfile", userProfile);
-    console.log("shohidul",profile)
+    console.log("shohidul", profile)
     console.log("session", session);
 
-    
+
 
 
     if (loading) {
