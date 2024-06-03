@@ -1,6 +1,7 @@
 'use client';
 
 import ProfileEdit from "@/components/ProfileEdit/ProfileEdit";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 type User = {
@@ -38,6 +39,7 @@ async function fetchUserProfile(id: string): Promise<User | undefined> {
 }
 
 const UserProfile: React.FC<{ params: { id: string } }> = ({ params }) => {
+    const { data: session, status } = useSession();
     const [profile, setProfile] = useState<User | undefined>(undefined);
 
     useEffect(() => {
@@ -47,18 +49,22 @@ const UserProfile: React.FC<{ params: { id: string } }> = ({ params }) => {
                 setProfile(data);
             }
         };
-        fetchProfileData();
-    }, [params.id]);
 
-    console.log("UserProfile data", profile);
+        if (status === 'authenticated') {
+            fetchProfileData();
+        } else if (status === 'unauthenticated') {
+            // Handle unauthenticated state if necessary
+        }
+    }, [params.id, status]);
 
-    if (profile === undefined) {
-        return <p>Loading...</p>;
-    }
 
     return (
         <div>
-            <ProfileEdit profile={profile} params={params} />
+            {
+                profile && (
+                    <ProfileEdit profile={profile} params={params} />
+                )
+            }
         </div>
     );
 };

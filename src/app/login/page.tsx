@@ -20,11 +20,7 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    useEffect(() => {
-        if (status === "authenticated") {
-            router.push("/");
-        }
-    }, [status, router]);
+   
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
