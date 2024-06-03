@@ -27,6 +27,15 @@ const ProfilePage = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
 
+
+
+    if (status === 'loading') {
+        return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>;
+    } else if (!session) {
+        router.push("/login")
+    }
+
+
     useEffect(() => {
         const fetchUserData = async () => {
             try {
@@ -42,13 +51,11 @@ const ProfilePage = () => {
             } catch (err) {
                 console.error(err);
             }
-        };
 
-        if (status === 'loading') {
-            return;
-        } else if (session) {
-            fetchUserData();
-        }
+        };
+        fetchUserData();
+
+
     }, [status, router]);
 
     // Filter user data based on the session email
@@ -69,7 +76,6 @@ const ProfilePage = () => {
             }
         };
         fetchProfile()
-
 
     }, [status, userData]);
 
