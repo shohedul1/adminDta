@@ -53,6 +53,7 @@ const ProfilePage = () => {
 
     // Filter user data based on the session email
     const userData = allUsers.find(user => user.email === session?.user?.email);
+    console.log("userdata", userData);
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -67,13 +68,12 @@ const ProfilePage = () => {
                 }
             }
         };
+        fetchProfile()
 
-        if (status === 'loading') {
-            return;
-        } else if (session) {
-            fetchProfile()
-        }
+
     }, [status, userData]);
+
+    console.log("profilePage", profile)
 
 
 
