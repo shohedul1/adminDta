@@ -604,6 +604,7 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ profile, params }) => {
             if (response.ok) {
                 toast.success("User updated successfully");
                 setTimeout(() => {
+                    window.location.reload();
                     router.push("/profile");
                 }, 500);
             } else {

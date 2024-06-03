@@ -15,32 +15,24 @@ interface User {
     about?: string;
 }
 
-async function getUserData(id: string): Promise<User | undefined> {
-    try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user/${id}`, {
-            cache: "no-store"
-        });
-        if (res.ok) {
-            return res.json();
-        }
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-    }
-}
-
 const UserProfile: React.FC<{ params: { id: string } }> = ({ params }) => {
     const [profile, setProfile] = useState<User | null>(null);
 
-    useEffect(() => {
-        const fetchUserData = async () => {
-            const data = await getUserData(params.id);
-            if (data) {
-                setProfile(data);
-            }
-        };
+    async function fetchBlog() {
+        try {
+            const response = await fetch(`/api/user/${params.id}`);
+            const data = await response.json();
+            setProfile(data)
+        } catch (error) {
+            console.error('Error fetching blog:', error);
+        }
+    }
 
-        fetchUserData();
-    }, [params.id]);
+    useEffect(() => {
+        fetchBlog();
+    }, []);
+
+    console.log("userProfile data",profile)
 
     return (
         <div>
