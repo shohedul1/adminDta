@@ -20,7 +20,7 @@ type User = {
 };
 
 async function fetchUser(): Promise<User[] | undefined> {
-    const apiUrl = `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`;
+    const apiUrl = '/api/user';
     console.log("Fetching user data from:", apiUrl);
 
     try {
