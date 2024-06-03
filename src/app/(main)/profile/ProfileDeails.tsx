@@ -21,12 +21,12 @@ type User = {
 };
 
 type ProfileDetailsProps = {
-    profile: User;
+    userProfile: User;
 };
 
-const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile }) => {
+const ProfileDetails: React.FC<ProfileDetailsProps> = ({ userProfile }) => {
     const { data: session } = useSession();
-    const imageUrl = profile?.avatar?.url || session?.user?.image || '/food_18.png'
+    const imageUrl = userProfile?.avatar?.url || session?.user?.image || '/food_18.png'
 
 
     return (
@@ -51,40 +51,40 @@ const ProfileDetails: React.FC<ProfileDetailsProps> = ({ profile }) => {
             <div className="flex flex-col md:felx-row gap-5">
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Name:</p>
-                    <p className='text-xl font-bold text-gray-400'>{profile?.name}</p>
+                    <p className='text-xl font-bold text-gray-400'>{userProfile?.name}</p>
                 </div>
 
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Email:</p>
-                    <p className='text-xl font-boldv text-gray-400'>{profile?.email}</p>
+                    <p className='text-xl font-boldv text-gray-400'>{userProfile?.email}</p>
                 </div>
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Age:</p>
-                    <p className='text-xl font-bold text-gray-400'>{profile?.age}</p>
+                    <p className='text-xl font-bold text-gray-400'>{userProfile?.age}</p>
                 </div>
 
                 <div className='space-y-2'>
                     <p className="text-2xl font-bold">About Me</p>
-                    <p className='text-xl font-bold text-gray-400 '>{profile?.about}</p>
+                    <p className='text-xl font-bold text-gray-400 '>{userProfile?.about}</p>
                 </div>
 
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Designation:</p>
-                    <p className='text-xl font-bold text-gray-400'>{profile?.designation}</p>
+                    <p className='text-xl font-bold text-gray-400'>{userProfile?.designation}</p>
                 </div>
 
 
                 <div className="space-y-2">
                     <p className="text-2xl font-bold">Location:</p>
-                    <p className='text-xl font-bold text-gray-400'>{profile?.location}</p>
+                    <p className='text-xl font-bold text-gray-400'>{userProfile?.location}</p>
                 </div>
             </div>
 
             <div className="pt-5">
-                {profile?.email === session?.user?.email ? (
+                {userProfile?.email === session?.user?.email ? (
                     <Link
                         className="px-3 py-2 hover:bg-red-500 border border-red-500 hover:text-white transition-all duration-300 rounded-lg text-black font-bold"
-                        href={`/profile/${profile?._id}`}
+                        href={`/profile/${userProfile?._id}`}
                     >
                         Edit
                     </Link>

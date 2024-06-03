@@ -19,7 +19,7 @@ type User = {
     about?: string;
 };
 
-async function fetchUser(): Promise<User[] | undefined> {
+async function fetchUsers(): Promise<User[] | undefined> {
     const apiUrl = '/api/user';
     console.log("Fetching user data from:", apiUrl);
 
@@ -38,6 +38,25 @@ async function fetchUser(): Promise<User[] | undefined> {
     }
 }
 
+async function fetchUserProfile(userId: string): Promise<User | undefined> {
+    const apiUrl = `/api/user/${userId}`;
+    console.log("Fetching user profile from:", apiUrl);
+
+    try {
+        const res = await fetch(apiUrl, {
+            cache: "no-store"
+        });
+
+        if (res.ok) {
+            return res.json();
+        } else {
+            console.error("Failed to fetch user profile:", res.statusText);
+        }
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+    }
+}
+
 const UserProfile: React.FC = () => {
     const { data: session, status } = useSession();
     const [profile, setProfile] = useState<User | null>(null);
@@ -46,7 +65,7 @@ const UserProfile: React.FC = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             if (status === 'authenticated' && session?.user?.email) {
-                const data = await fetchUser();
+                const data = await fetchUsers();
                 if (data) {
                     const userData = data.find((user: User) => user.email === session?.user?.email);
                     if (userData) {
@@ -68,7 +87,24 @@ const UserProfile: React.FC = () => {
         fetchUserData();
     }, [session, status]);
 
-    console.log("shohiudlPramanik",profile)
+    const [userProfile, setUserProfile] = useState<User | null>(null);
+
+    useEffect(() => {
+        if (profile?._id) {
+            const fetchProfileData = async () => {
+                const data = await fetchUserProfile(profile._id);
+                if (data) {
+                    setUserProfile(data);
+                } else {
+                    console.warn("No profile data returned from API for user ID:", profile._id);
+                }
+            };
+
+            fetchProfileData();
+        }
+    }, [profile]);
+
+    console.log("UserProfile", userProfile);
 
     if (loading) {
         return <p>Loading...</p>;
@@ -76,8 +112,8 @@ const UserProfile: React.FC = () => {
 
     return (
         <div>
-            {profile ? (
-                <ProfileDetails profile={profile} />
+            {userProfile ? (
+                <ProfileDetails userProfile={userProfile} />
             ) : (
                 <p>No profile found for the current session.</p>
             )}
