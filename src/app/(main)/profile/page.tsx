@@ -4,22 +4,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, fetchUserProfile } from '@/services';
-import ProfileDetails from './ProfileDeails';
-
-// type User = {
-//     _id: string;
-//     name: string;
-//     email: string;
-//     password: string;
-//     createdAt: string;
-//     updatedAt: string;
-//     __v: number;
-//     avatar: { url: string };
-//     age?: string;
-//     designation?: string;
-//     location?: string;
-//     about?: string;
-// };
+import ProfileDetails from './ProfileDetails';
 
 const ProfilePage = () => {
     const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -27,41 +12,40 @@ const ProfilePage = () => {
     const { data: session, status } = useSession();
     const router = useRouter();
 
-
-
-    if (status === 'loading') {
-        return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>;
-    } else if (!session) {
-        router.push("/login")
-    }
-
-
+    // Fetch all users when the status is authenticated
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                const response = await fetch('/api/user', {
-                    cache: 'no-store'
-                });
+        if (status === 'authenticated') {
+            const fetchUserData = async () => {
+                try {
+                    const response = await fetch('/api/user', {
+                        cache: 'no-store'
+                    });
 
-                if (!response.ok) {
-                    throw new Error(`Error fetching user data: ${response.statusText}`);
+                    if (!response.ok) {
+                        throw new Error(`Error fetching user data: ${response.statusText}`);
+                    }
+                    const data: User[] = await response.json();
+                    setAllUsers(data);
+                } catch (err) {
+                    console.error(err);
                 }
-                const data: User[] = await response.json();
-                setAllUsers(data);
-            } catch (err) {
-                console.error(err);
-            }
+            };
 
-        };
-        fetchUserData();
+            fetchUserData();
+        }
+    }, [status]);
 
-
+    // Redirect to login if the user is not authenticated
+    useEffect(() => {
+        if (status === 'unauthenticated') {
+            router.push('/login');
+        }
     }, [status, router]);
 
     // Filter user data based on the session email
     const userData = allUsers.find(user => user.email === session?.user?.email);
-    console.log("userdata", userData);
 
+    // Fetch profile data based on the filtered user data
     useEffect(() => {
         const fetchProfile = async () => {
             if (userData?._id) {
@@ -75,18 +59,23 @@ const ProfilePage = () => {
                 }
             }
         };
-        fetchProfile()
 
-    }, [status, userData]);
+        if (userData) {
+            fetchProfile();
+        }
+    }, [userData]);
 
-    console.log("profilePage", profile)
-
-
+    // Show loading spinner while session status is loading
+    if (status === 'loading' || !profile) {
+        return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>;
+    }
 
     return (
         <div>
-            {profile && (
+            {profile ? (
                 <ProfileDetails profile={profile} />
+            ) : (
+                <div>No profile found for the current session.</div>
             )}
         </div>
     );
