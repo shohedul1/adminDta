@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, fetchUserProfile } from '@/services';
-import ProfileDetails from './ProfileDetails';
+import ProfileDetails from './ProfileDeails';
 
 const ProfilePage = () => {
     const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -37,7 +37,9 @@ const ProfilePage = () => {
 
     // Redirect to login if the user is not authenticated
     useEffect(() => {
-        if (status === 'unauthenticated') {
+        if (status === 'loading') {
+            return;
+        } else if (status === "unauthenticated") {
             router.push('/login');
         }
     }, [status, router]);
@@ -65,10 +67,6 @@ const ProfilePage = () => {
         }
     }, [userData]);
 
-    // Show loading spinner while session status is loading
-    if (status === 'loading' || !profile) {
-        return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>;
-    }
 
     return (
         <div>
