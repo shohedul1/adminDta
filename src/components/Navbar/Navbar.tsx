@@ -55,7 +55,6 @@ const Navbar = () => {
         }
     }, [profile]);
 
-    console.log("shohiudlPramanik", userProfile)
 
     // Use a default image if no avatar is found
     const imageUrl = userProfile?.avatar?.url || session?.user?.image || '/food_18.png';

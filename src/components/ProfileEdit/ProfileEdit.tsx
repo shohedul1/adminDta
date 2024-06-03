@@ -524,6 +524,7 @@
 'use client';
 
 import { deletePhoto } from "@/actions/uploadActions";
+import { User } from "@/services/indext";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -531,19 +532,19 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { AiOutlineClose } from "react-icons/ai";
 
-interface Profile {
-    name: string;
-    email: string;
-    avatar?: { url: string; id?: string };
-    age?: string;
-    designation?: string;
-    location?: string;
-    about?: string;
-    [key: string]: any;
-}
+// interface Profile {
+//     name: string;
+//     email: string;
+//     avatar?: { url: string; id?: string };
+//     age?: string;
+//     designation?: string;
+//     location?: string;
+//     about?: string;
+//     [key: string]: any;
+// }
 
 interface ProfileEditProps {
-    profile: Profile;
+    profile: User;
     params: { id: string };
 }
 
@@ -551,7 +552,7 @@ const ProfileEdit: React.FC<ProfileEditProps> = ({ profile, params }) => {
     const CLOUD_NAME = "djhjt07rh";
     const UPLOAD_PRESET = "nextjs_blog_images";
 
-    const [profileToEdit, setProfileToEdit] = useState<Profile>(profile);
+    const [profileToEdit, setProfileToEdit] = useState<User>(profile);
     const [avatarToEdit, setAvatarToEdit] = useState<File | null>(null);
 
     const router = useRouter();
