@@ -1,6 +1,6 @@
 'use client';
 
-import { fetchUserProfile } from '@/app/(main)/profile/page';
+import { User, fetchUserProfile, fetchUsers } from '@/services/indext';
 import { signOut, useSession } from 'next-auth/react';
 import { Pacifico } from 'next/font/google';
 import Image from 'next/image';
@@ -9,39 +9,7 @@ import React, { useEffect, useState } from 'react';
 
 const pacifico = Pacifico({ subsets: ["latin"], weight: ["400"] }); // Corrected weights
 
-type User = {
-    _id: string;
-    name: string;
-    email: string;
-    password: string;
-    createdAt: string;
-    updatedAt: string;
-    __v: number;
-    avatar: { url: string };
-    age?: string;
-    designation?: string;
-    location?: string;
-    about?: string;
-};
 
-async function fetchUser(): Promise<User[] | undefined> {
-    const apiUrl = '/api/user';
-    console.log("Fetching user data from:", apiUrl);
-
-    try {
-        const res = await fetch(apiUrl, {
-            cache: "no-store"
-        });
-
-        if (res.ok) {
-            return res.json();
-        } else {
-            console.error("Failed to fetch user data:", res.statusText);
-        }
-    } catch (error) {
-        console.error("Error fetching user data:", error);
-    }
-}
 const Navbar = () => {
     const { data: session, status } = useSession();
     const [profile, setProfile] = useState<User | null>(null);
@@ -49,7 +17,7 @@ const Navbar = () => {
     useEffect(() => {
         const fetchUserData = async () => {
             if (status === 'authenticated' && session?.user?.email) {
-                const data = await fetchUser();
+                const data = await fetchUsers();
                 if (data) {
                     const userData = data.find((user: User) => user.email === session?.user?.email);
                     if (userData) {
