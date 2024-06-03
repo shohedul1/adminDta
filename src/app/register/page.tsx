@@ -51,7 +51,6 @@ export default function RegisterPage() {
             if (response.ok) {
                 toast.success("Registration Successful");
                 setTimeout(() => {
-                    window.location.reload()
                     router.push("/login");
                 }, 1000);
             } else {
