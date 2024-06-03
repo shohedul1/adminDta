@@ -4,7 +4,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, fetchUserProfile } from '@/services';
-import ProfileDetails from './ProfileDeails';
+import ProfileDetails from './ProfileDetails';
 
 const ProfilePage = () => {
     const [allUsers, setAllUsers] = useState<User[]>([]);
@@ -44,20 +44,22 @@ const ProfilePage = () => {
 
     useEffect(() => {
         const fetchProfile = async () => {
-            const userData = allUsers.find(user => user.email === session?.user?.email);
-            if (userData?._id) {
-                try {
-                    const data = await fetchUserProfile(userData._id);
-                    if (data) {
-                        setProfile(data);
+            if (session?.user?.email) {
+                const userData = allUsers.find(user => user?.email === session?.user?.email);
+                if (userData?._id) {
+                    try {
+                        const data = await fetchUserProfile(userData._id);
+                        if (data) {
+                            setProfile(data);
+                        }
+                    } catch (error) {
+                        console.error(error);
                     }
-                } catch (error) {
-                    console.error(error);
                 }
             }
         };
 
-        if (allUsers.length > 0 && session?.user) {
+        if (allUsers.length > 0 && session?.user?.email) {
             fetchProfile();
         }
     }, [allUsers, session]);
