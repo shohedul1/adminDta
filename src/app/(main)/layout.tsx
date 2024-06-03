@@ -6,15 +6,14 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    const { data: session, status } = useSession();
+    const { data: session } = useSession();
     const router = useRouter();
 
     useEffect(() => {
-        if (status === 'loading') return; // Do nothing while loading
         if (!session) {
             router.push('/login');
         }
-    }, [session, status, router]);
+    }, [session, , router]);
 
 
     return (

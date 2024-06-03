@@ -2,22 +2,39 @@
 
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
-import { User, fetchUserProfile, fetchUsers } from '@/services/indext';
+import { User } from '@/services/indext';
 import ProfileDetails from './ProfileDeails';
+
+// Fetch user data function
+async function fetchUsers(): Promise<User[] | undefined> {
+    const apiUrl = `${process.env.NEXT_PUBLIC_NEXTAUTH_URL}/api/user`;
+    console.log("Fetching user data from:", apiUrl);
+
+    try {
+        const res = await fetch(apiUrl, {
+            cache: "no-store"
+        });
+
+        if (res.ok) {
+            return res.json();
+        } else {
+            console.error("Failed to fetch user data:", res.statusText);
+        }
+    } catch (error) {
+        console.error("Error fetching user data:", error);
+    }
+}
 
 const UserProfile: React.FC = () => {
     const { data: session, status } = useSession();
     const [profile, setProfile] = useState<User | null>(null);
-    const [userProfile, setUserProfile] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchUserData = async () => {
-            try {
-                if (session?.user?.email) {
-                    console.log("Fetching user data...");
+            if (session) {
+                try {
                     const data = await fetchUsers();
-                    console.log("User data fetched:", data);
                     if (data) {
                         const userData = data.find((user: User) => user.email === session?.user?.email);
                         if (userData) {
@@ -28,45 +45,20 @@ const UserProfile: React.FC = () => {
                     } else {
                         console.warn("No user data returned from API");
                     }
-                } else {
-                    console.warn("No session email found");
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
                 }
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-            } finally {
-                setLoading(false);
+            } else {
+                console.warn("No session email found");
             }
+            setLoading(false);
         };
 
-        if (status === 'authenticated') {
-            fetchUserData();
-        }
+        fetchUserData();
     }, [session, status]);
 
-    useEffect(() => {
-        const fetchProfileData = async () => {
-            if (profile?._id) {
-                try {
-                    console.log("Fetching profile data for ID:", profile._id);
-                    const data = await fetchUserProfile(profile._id);
-                    console.log("Profile data fetched:", data);
-                    if (data) {
-                        setUserProfile(data);
-                    } else {
-                        console.warn("No profile data returned from API for user ID:", profile._id);
-                    }
-                } catch (error) {
-                    console.error("Error fetching user profile:", error);
-                }
-            }
-        };
-
-        fetchProfileData();
-    }, [profile]);
-
-    console.log("UserProfile", userProfile);
-    console.log("shohidul", profile)
-    console.log("session", session);
+    console.log("UserProfile", profile);
+    console.log("Session", session);
 
     if (loading) {
         return <p>Loading...</p>;
@@ -74,8 +66,8 @@ const UserProfile: React.FC = () => {
 
     return (
         <div>
-            {userProfile ? (
-                <ProfileDetails userProfile={userProfile} />
+            {profile ? (
+                <ProfileDetails profile={profile} />
             ) : (
                 <p>No profile found for the current session.</p>
             )}
