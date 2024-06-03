@@ -1,5 +1,6 @@
 'use client';
 
+import { fetchUserProfile } from '@/app/(main)/profile/page';
 import { signOut, useSession } from 'next-auth/react';
 import { Pacifico } from 'next/font/google';
 import Image from 'next/image';
@@ -69,12 +70,27 @@ const Navbar = () => {
         fetchUserData();
     }, [session, status]);
 
-    console.log("shohiudlPramanik", profile)
+    const [userProfile, setUserProfile] = useState<User | null>(null);
 
-    // Ensure that the found user has the correct type
+    useEffect(() => {
+        if (profile?._id) {
+            const fetchProfileData = async () => {
+                const data = await fetchUserProfile(profile._id);
+                if (data) {
+                    setUserProfile(data);
+                } else {
+                    console.warn("No profile data returned from API for user ID:", profile._id);
+                }
+            };
+
+            fetchProfileData();
+        }
+    }, [profile]);
+
+    console.log("shohiudlPramanik", userProfile)
 
     // Use a default image if no avatar is found
-    const imageUrl = profile?.avatar?.url || session?.user?.image || '/food_18.png';
+    const imageUrl = userProfile?.avatar?.url || session?.user?.image || '/food_18.png';
 
 
     const [toggle, setToggle] = useState(false);

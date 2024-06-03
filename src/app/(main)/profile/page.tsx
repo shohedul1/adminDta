@@ -38,7 +38,7 @@ async function fetchUsers(): Promise<User[] | undefined> {
     }
 }
 
-async function fetchUserProfile(userId: string): Promise<User | undefined> {
+export async function fetchUserProfile(userId: string): Promise<User | undefined> {
     const apiUrl = `/api/user/${userId}`;
     console.log("Fetching user profile from:", apiUrl);
 
