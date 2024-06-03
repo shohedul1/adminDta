@@ -61,6 +61,7 @@ const UserProfile: React.FC = () => {
     }, [profile]);
 
     console.log("UserProfile", userProfile);
+    console.log("shohidul",profile)
     console.log("session", session);
 
     
