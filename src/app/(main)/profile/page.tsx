@@ -3,11 +3,10 @@
 import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { User, fetchUserProfile } from '@/services';
+import { User } from '@/services';
 import ProfileDetails from './ProfileDetails';
 
 const ProfilePage = () => {
-    const [allUsers, setAllUsers] = useState<User[]>([]);
     const [profile, setProfile] = useState<User | null>(null);
     const { data: session, status } = useSession();
     const router = useRouter();
@@ -31,7 +30,12 @@ const ProfilePage = () => {
                     throw new Error(`Error fetching user data: ${response.statusText}`);
                 }
                 const data: User[] = await response.json();
-                setAllUsers(data);
+                const user = data.find((user) => user.email === session?.user?.email);
+                if (user) {
+                    setProfile(user);
+                } else {
+                    console.error("No profile found for the current session.");
+                }
             } catch (err) {
                 console.error(err);
             }
@@ -40,29 +44,7 @@ const ProfilePage = () => {
         if (status === 'authenticated') {
             fetchUserData();
         }
-    }, [status]);
-
-    useEffect(() => {
-        const fetchProfile = async () => {
-            if (session?.user?.email) {
-                const userData = allUsers.find(user => user?.email === session?.user?.email);
-                if (userData?._id) {
-                    try {
-                        const data = await fetchUserProfile(userData._id);
-                        if (data) {
-                            setProfile(data);
-                        }
-                    } catch (error) {
-                        console.error(error);
-                    }
-                }
-            }
-        };
-
-        if (allUsers.length > 0 && session?.user?.email) {
-            fetchProfile();
-        }
-    }, [allUsers, session]);
+    }, [status, session]);
 
     if (status === "loading") {
         return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>;
