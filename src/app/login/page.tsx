@@ -1,7 +1,6 @@
-
 'use client';
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ChangeEvent, useState, useEffect } from "react";
@@ -12,28 +11,43 @@ import { FcGoogle } from "react-icons/fc";
 const initialState = {
     email: "",
     password: ""
-}
+};
 
 export default function LoginPage() {
+    const { data: session, status } = useSession();
     const [showPassword, setShowPassword] = useState(false);
     const [state, setState] = useState(initialState);
+    const [loading, setLoading] = useState(false);
     const router = useRouter();
 
+    useEffect(() => {
+        if (status === "authenticated") {
+            router.push("/");
+        }
+    }, [status, router]);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
+        if (!state.email || !state.password) {
+            toast.error("Please fill in all fields");
+            return;
+        }
+        setLoading(true);
         try {
             const res = await signIn("credentials", {
                 email: state.email,
                 redirect: false,
                 password: state.password,
             });
+            setLoading(false);
             if (res?.ok) {
-                router.push("/")
+                toast.success("Login successful!");
+                router.push("/");
+            } else {
+                toast.error(res?.error || "Login failed");
             }
-
         } catch (error) {
-            // Display error toast message
+            setLoading(false);
             toast.error("Error occurred while signing in");
             console.log(error);
         }
@@ -42,6 +56,10 @@ export default function LoginPage() {
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         setState({ ...state, [event.target.name]: event.target.value });
     };
+
+    if (status === "loading") {
+        return <div className="flex justify-center items-center h-screen"><p>Loading...</p></div>;
+    }
 
     return (
         <>
@@ -81,9 +99,10 @@ export default function LoginPage() {
                         </div>
                         <button
                             type="submit"
-                            className="w-full max-w-[150px] m-auto bg-red-500 hover:bg-red-600 cursor-pointer text-white text-xl font-medium text-center py-1 rounded-full mt-4"
+                            className={`w-full max-w-[150px] m-auto bg-red-500 hover:bg-red-600 cursor-pointer text-white text-xl font-medium text-center py-1 rounded-full mt-4 ${loading && "opacity-50 cursor-not-allowed"}`}
+                            disabled={loading}
                         >
-                            Login
+                            {loading ? "Loading..." : "Login"}
                         </button>
                         <span className="text-center text-white text-2xl">or</span>
                         <button onClick={() => signIn("google", { callbackUrl: "/" })} className="bg-white p-2 text-xl flex items-center gap-2 justify-center rounded-md">
@@ -103,5 +122,3 @@ export default function LoginPage() {
         </>
     );
 }
-
-
